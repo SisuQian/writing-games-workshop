@@ -1,9 +1,10 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SISU写作游戏工作坊</title>
+<meta name="description" content="SISUs 乌力波写作游戏工作坊 — Oulipo Writing Games Workshop" />
 
 <style>
 :root{
@@ -12,166 +13,513 @@
   --fg:#e9eef5;
   --muted:#a8b3c2;
   --line:rgba(233,238,245,.12);
+  --line2:rgba(233,238,245,.08);
   --blue:#7fb2ff;
+  --blue2:#4e8dff;
+  --shadow:rgba(0,0,0,.42);
 }
 
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
 body{
   margin:0;
-  background:var(--bg);
+  background:
+    radial-gradient(900px 420px at 50% -10%, rgba(127,178,255,.22), transparent 60%),
+    radial-gradient(900px 420px at 50% 115%, rgba(127,178,255,.10), transparent 60%),
+    var(--bg);
   color:var(--fg);
-  font-family: ui-serif, Georgia, "Noto Serif CJK SC","Songti SC",serif;
-  line-height:1.7;
+  line-height:1.75;
+  font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC","Noto Sans CJK SC","Microsoft YaHei", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .container{
-  max-width:760px;
-  margin:80px auto 120px;
-  padding:0 20px;
+  max-width:980px;
+  margin:64px auto 110px;
+  padding:0 18px;
 }
 
-/* ===== HEADER ===== */
+.frame{
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:linear-gradient(180deg, rgba(15,22,32,.86), rgba(15,22,32,.66));
+  box-shadow: 0 14px 48px var(--shadow);
+  overflow:hidden;
+}
 
+/* ===== Header ===== */
 .header{
+  padding:30px 26px 18px;
+  border-bottom:1px solid var(--line);
   text-align:center;
-  margin-bottom:48px;
+  position:relative;
 }
+.header:before,.header:after{
+  content:"";
+  position:absolute;
+  top:0;
+  width:46%;
+  height:100%;
+  pointer-events:none;
+  opacity:.5;
+  border-top:1px solid rgba(127,178,255,.14);
+}
+.header:before{ left:0; border-right:1px solid rgba(233,238,245,.06); }
+.header:after{ right:0; border-left:1px solid rgba(233,238,245,.06); }
 
 .main-title{
   font-size:34px;
+  font-weight:650;
   letter-spacing:.6px;
-  margin-bottom:12px;
+  margin:0 0 10px;
 }
-
 .sub-title{
-  font-size:14px;
-  color:var(--muted);
-  letter-spacing:1px;
-  font-family: ui-sans-serif, system-ui;
-}
-
-/* ===== CONTENT ===== */
-
-section{
-  margin-bottom:30px;
-  padding-top:16px;
-  border-top:1px solid var(--line);
-}
-
-h2{
-  font-size:12px;
-  letter-spacing:1.4px;
-  text-transform:uppercase;
-  font-family: ui-sans-serif, system-ui;
-  margin-bottom:8px;
-}
-
-p{
   margin:0;
-  color:#d7dde6;
+  font-size:13px;
+  color:var(--muted);
+  letter-spacing:.9px;
+  font-weight:520;
 }
 
-/* ===== CONTACT ===== */
+/* small symmetric metadata row */
+.meta{
+  margin-top:14px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.chip{
+  border:1px solid var(--line2);
+  border-radius:999px;
+  padding:6px 10px;
+  background:rgba(11,15,20,.18);
+  font-size:12px;
+  color:var(--muted);
+  letter-spacing:.3px;
+}
+.chip b{ color:rgba(233,238,245,.92); font-weight:650; }
+
+/* ===== Banner Slider ===== */
+.banner{
+  position:relative;
+  border-bottom:1px solid var(--line);
+  background:rgba(11,15,20,.22);
+}
+.banner-inner{
+  position:relative;
+  height:380px;
+  overflow:hidden;
+}
+.slide{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  transition: opacity 900ms ease;
+}
+.slide.active{ opacity:1; }
+.slide img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  filter: saturate(.92) contrast(1.02);
+}
+
+/* film-like overlays */
+.banner-inner:before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(800px 420px at 50% 0%, rgba(127,178,255,.14), transparent 60%),
+    linear-gradient(180deg, rgba(11,15,20,.35), rgba(11,15,20,.10) 40%, rgba(11,15,20,.48));
+  pointer-events:none;
+  z-index:2;
+}
+.banner-inner:after{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    linear-gradient(90deg, rgba(233,238,245,.05), transparent 18%, transparent 82%, rgba(233,238,245,.05)),
+    repeating-linear-gradient(0deg, rgba(233,238,245,.03), rgba(233,238,245,.03) 1px, transparent 1px, transparent 6px);
+  opacity:.30;
+  pointer-events:none;
+  z-index:2;
+}
+
+/* banner caption */
+.banner-caption{
+  position:absolute;
+  left:22px; right:22px; bottom:16px;
+  z-index:3;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.caption-left{
+  text-transform:uppercase;
+  letter-spacing:1.1px;
+  font-size:12px;
+  color:rgba(233,238,245,.82);
+}
+.caption-right{
+  font-size:12px;
+  color:rgba(233,238,245,.62);
+}
+
+/* dots */
+.dots{
+  position:absolute;
+  z-index:4;
+  left:0; right:0; bottom:12px;
+  display:flex;
+  justify-content:center;
+  gap:8px;
+}
+.dot{
+  width:7px; height:7px;
+  border-radius:999px;
+  border:1px solid rgba(233,238,245,.34);
+  background:rgba(11,15,20,.35);
+  cursor:pointer;
+  padding:0;
+}
+.dot.active{
+  background:rgba(127,178,255,.85);
+  border-color:rgba(127,178,255,.85);
+}
+
+/* ===== Content ===== */
+.content{
+  padding:26px 26px 34px;
+}
+
+/* section as designed “cards” */
+.section{
+  margin-top:18px;
+  border:1px solid var(--line2);
+  border-radius:16px;
+  background:rgba(11,15,20,.16);
+  overflow:hidden;
+}
+.section:first-child{ margin-top:0; }
+
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  padding:14px 16px;
+  border-bottom:1px solid var(--line2);
+  background:rgba(15,22,32,.25);
+}
+.kicker{
+  font-size:12px;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  color:rgba(233,238,245,.86);
+  font-weight:650;
+}
+.kicker .zh{
+  letter-spacing:.6px;
+  text-transform:none;
+  margin-right:10px;
+  color:rgba(233,238,245,.92);
+}
+.kicker .en{
+  color:rgba(233,238,245,.62);
+  font-weight:520;
+}
+
+.section-body{
+  padding:16px;
+}
+
+.bilingual{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:18px;
+  align-items:start;
+}
+.zh-block p,
+.en-block p{
+  margin:0;
+  color:rgba(233,238,245,.90);
+}
+.en-block p{
+  color:rgba(233,238,245,.72);
+  font-size:13.5px;
+  line-height:1.75;
+}
+
+.note{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:12.5px;
+  letter-spacing:.2px;
+}
 
 a{
   color:var(--fg);
   text-decoration:none;
-  border-bottom:1px solid var(--blue);
+  border-bottom:1px solid rgba(127,178,255,.35);
 }
+a:hover{ border-bottom-color:rgba(127,178,255,.95); }
 
-/* ===== FOOTER ===== */
-
+/* ===== Footer ===== */
 .footer{
-  margin-top:80px;
+  margin-top:26px;
+  padding-top:18px;
+  border-top:1px solid var(--line2);
   text-align:center;
 }
-
 .slogan{
-  font-family: ui-sans-serif, system-ui;
-  color:var(--blue);
-  letter-spacing:.8px;
+  color:rgba(127,178,255,.95);
+  letter-spacing:.6px;
   font-size:14px;
-  margin-bottom:20px;
+  margin:0 0 14px;
 }
-
 .logo{
-  width:42px;
-  opacity:.85;
+  width:34px;
+  opacity:.75;
+  display:inline-block;
+}
+.copyright{
+  margin-top:10px;
+  font-size:12px;
+  color:rgba(233,238,245,.50);
+  letter-spacing:.3px;
+}
+.credits{
+  margin-top:6px;
+  font-size:11.5px;
+  color:rgba(233,238,245,.42);
+  letter-spacing:.25px;
 }
 
+@media (max-width:860px){
+  .header:before,.header:after{ display:none; }
+  .banner-inner{ height:260px; }
+  .banner-caption{ left:16px; right:16px; }
+  .bilingual{ grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .slide{ transition:none; }
+}
 </style>
 </head>
 
 <body>
-
 <div class="container">
+  <div class="frame">
 
-<div class="header">
-<div class="main-title">
-SISU写作游戏工作坊
+    <div class="header">
+      <div class="main-title">SISU写作游戏工作坊</div>
+      <p class="sub-title">SISUs 乌力波写作游戏工作坊 — Oulipo Writing Games Workshop</p>
+
+      <div class="meta">
+        <span class="chip"><b>形式</b> 线上 / 线下</span>
+        <span class="chip"><b>人数</b> 4–20</span>
+        <span class="chip"><b>参与</b> 预约制</span>
+      </div>
+    </div>
+
+    <!-- Banner Slider -->
+    <div class="banner" aria-label="Project banners">
+      <div class="banner-inner" id="bannerInner">
+        <div class="slide active"><img src="banner-1.jpg" alt="Banner 1"></div>
+        <div class="slide"><img src="banner-2.jpg" alt="Banner 2"></div>
+        <div class="slide"><img src="banner-3.jpg" alt="Banner 3"></div>
+        <div class="slide"><img src="banner-4.jpg" alt="Banner 4"></div>
+        <div class="slide"><img src="banner-5.jpg" alt="Banner 5"></div>
+
+        <div class="banner-caption">
+          <div class="caption-left">Research × Practice × Game</div>
+          <div class="caption-right">Oulipo / Constraints / Mapping</div>
+        </div>
+
+        <div class="dots" id="dots" aria-label="Banner navigation">
+          <button class="dot active" type="button" aria-label="Go to banner 1"></button>
+          <button class="dot" type="button" aria-label="Go to banner 2"></button>
+          <button class="dot" type="button" aria-label="Go to banner 3"></button>
+          <button class="dot" type="button" aria-label="Go to banner 4"></button>
+          <button class="dot" type="button" aria-label="Go to banner 5"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- INTRO -->
+      <div class="section">
+        <div class="section-head">
+          <div class="kicker"><span class="zh">简介</span><span class="en">Introduction</span></div>
+        </div>
+        <div class="section-body">
+          <div class="bilingual">
+            <div class="zh-block">
+              <p>
+                乌力波（法语：Ouvroir de littérature potentielle, Oulipo）意为“潜在文学工场”，于1960年在巴黎创立，旨在通过人为限制探查语言的潜在结构。
+                它将文学从灵感中心转向可设计、可生成的模式实验。20世纪60—70年代，随着乔治·佩雷克等成员的加入，乌力波系统化发展出多种写作方法，并与结构主义的语言观形成共振，强调文本由结构生成而非单纯表达。
+                1990年代起，乌力波在数字人文与算法写作领域获得新解释，被视为生成式文本与程序性写作的早期模型，其影响跨越文学、数学、游戏研究与概念艺术。
+              </p>
+            </div>
+            <div class="en-block">
+              <p>
+                Oulipo (Ouvroir de littérature potentielle), founded in Paris in 1960, explores the latent structures of language through deliberately designed constraints.
+                It shifts writing away from inspiration-as-origin toward reproducible, generative experiments.
+                With members such as Georges Perec, Oulipo developed a systematic repertoire of methods resonating with structuralist views of text as produced by form.
+                Since the 1990s, it has been re-read through digital humanities and algorithmic writing—as an early model for procedural and generative text across literature, mathematics, game studies, and conceptual art.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONCEPT -->
+      <div class="section">
+        <div class="section-head">
+          <div class="kicker"><span class="zh">理念</span><span class="en">Concept</span></div>
+        </div>
+        <div class="section-body">
+          <div class="bilingual">
+            <div class="zh-block">
+              <p>
+                写作不仅是表达工具，也是可以被设计、被触发、被生成的实践。
+                本工作坊把“限制”当作通道：让结构先行，让语言在规则中自行生长。
+              </p>
+              <div class="note">关键词：规则 / 生成 / 结构 / 共同阅读与互评</div>
+            </div>
+            <div class="en-block">
+              <p>
+                Writing is not only expression but a practice that can be designed, triggered, and generated.
+                Here, constraints function as a passage: structure leads, and language grows inside rules—through collective reading and iterative feedback.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- METHOD -->
+      <div class="section">
+        <div class="section-head">
+          <div class="kicker"><span class="zh">方法</span><span class="en">Method</span></div>
+        </div>
+        <div class="section-body">
+          <div class="bilingual">
+            <div class="zh-block">
+              <p>
+                在「SISU乌力波写作游戏工作坊」中，乌力波作为即兴创作的通道，以游戏介入写作，
+                在跨越方法与多语境下体验乌力波的创作乐趣。愿每位参与者沉浸其中，有所收获。
+              </p>
+              <div class="note">形式：短规则写作 + 观察/记录 + 讨论与改写（可按场地定制）</div>
+            </div>
+            <div class="en-block">
+              <p>
+                Within the SISU Oulipo Writing Games Workshop, Oulipo works as a channel for improvisation.
+                We approach writing through play, testing constraints across contexts and methods.
+                Participants move between exercises, observation/notation, discussion, and rewriting—customizable to the venue and audience.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PARTICIPATION -->
+      <div class="section">
+        <div class="section-head">
+          <div class="kicker"><span class="zh">参与机制</span><span class="en">Participation</span></div>
+        </div>
+        <div class="section-body">
+          <div class="bilingual">
+            <div class="zh-block">
+              <p>线上或线下预约报名。限 4–20 人。可为机构/学校/艺术空间提供定制版工作坊。</p>
+              <div class="note">报名时可说明：语言（中/英/双语）、主题、时长、参与者背景。</div>
+            </div>
+            <div class="en-block">
+              <p>
+                Registration by appointment (online or onsite). Group size: 4–20.
+                Tailored versions are available for institutions, schools, and art spaces.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="section">
+        <div class="section-head">
+          <div class="kicker"><span class="zh">联系方式</span><span class="en">Contact</span></div>
+        </div>
+        <div class="section-body">
+          <div class="bilingual">
+            <div class="zh-block">
+              <p>
+                邮箱：<a href="mailto:sisus.qian@gmail.com">sisus.qian@gmail.com</a><br/>
+                微信：sisuso
+              </p>
+            </div>
+            <div class="en-block">
+              <p>
+                Email: <a href="mailto:sisus.qian@gmail.com">sisus.qian@gmail.com</a><br/>
+                WeChat: sisuso
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="footer">
+        <p class="slogan">Writing as Game, Writing as Mapping.</p>
+        <img src="logo.png" class="logo" alt="logo">
+        <div class="copyright">© <span id="y"></span></div>
+        <div class="credits">Concept &amp; Copyright © SISU Studio. Design by WrongWrong Planet.</div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
-<div class="sub-title">
-SISUs 乌力波写作游戏工作坊 — Oulipo Writing Games Workshop
-</div>
-</div>
+<script>
+  // year
+  document.getElementById("y").textContent = new Date().getFullYear();
 
-<section>
-<h2>简介</h2>
-<p>
-乌力波（Ouvroir de littérature potentielle，Oulipo）意为“潜在文学工场”，
-1960年创立于巴黎，通过人为限制探索语言的潜在结构。
-它将文学从灵感中心转向可设计、可生成的结构实验。
-20世纪60—70年代，乔治·佩雷克等成员发展出多种写作方法，
-并与结构主义语言观产生共振。
-1990年代以来，乌力波在数字人文与算法写作领域获得新的解释，
-被视为生成式文本与程序写作的重要先驱。
-</p>
-</section>
+  // slider
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  const dots = Array.from(document.querySelectorAll("#dots .dot"));
+  let index = 0;
+  const intervalMs = 4200;
+  let timer = null;
 
-<section>
-<h2>理念</h2>
-<p>
-写作可以被设计、被触发、被生成。
-文本既是结构实践，也是共享的游戏与方法。
-</p>
-</section>
+  function show(i){
+    index = (i + slides.length) % slides.length;
+    slides.forEach((s, k) => s.classList.toggle("active", k === index));
+    dots.forEach((d, k) => d.classList.toggle("active", k === index));
+  }
 
-<section>
-<h2>方法</h2>
-<p>
-在「SISU乌力波写作游戏工作坊」中，
-乌力波被作为即兴创作的通道，
-通过游戏与规则进入写作，
-在多种方法和语境之间体验语言生成的乐趣。
-</p>
-</section>
+  function start(){
+    stop();
+    timer = setInterval(() => show(index + 1), intervalMs);
+  }
 
-<section>
-<h2>参与机制</h2>
-<p>
-线上或线下预约报名。参与人数 4–20 人。
-</p>
-</section>
+  function stop(){
+    if (timer) clearInterval(timer);
+    timer = null;
+  }
 
-<section>
-<h2>联系方式</h2>
-<p>
-邮箱：<a href="mailto:sisus.qian@gmail.com">sisus.qian@gmail.com</a><br>
-微信：sisuso
-</p>
-</section>
+  dots.forEach((d, i) => {
+    d.addEventListener("click", () => { show(i); start(); });
+  });
 
-<div class="footer">
+  const banner = document.getElementById("bannerInner");
+  banner.addEventListener("mouseenter", stop);
+  banner.addEventListener("mouseleave", start);
 
-<div class="slogan">
-Writing as Game, Writing as Mapping.
-</div>
-
-<img src="logo.png" class="logo"/>
-
-</div>
-
-</div>
-
+  start();
+</script>
 </body>
 </html>
