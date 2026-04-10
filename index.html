@@ -169,30 +169,59 @@
     letter-spacing: 0.04em;
   }
 
-  /* ── BANNER IMAGES ── */
-  .banner-strip {
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    padding: 16px 20px;
+  /* ── BANNER SLIDESHOW ── */
+  .banner-slideshow {
+    position: relative;
     background: var(--surface-2);
-    scrollbar-width: none;
-    -ms-overflow-style: none;
     border-bottom: 1px solid var(--border);
+    overflow: hidden;
   }
-  .banner-strip::-webkit-scrollbar { display: none; }
 
-  .banner-strip img {
-    height: 140px;
-    width: auto;
-    flex-shrink: 0;
-    border-radius: 8px;
-    object-fit: cover;
-    opacity: 0.9;
+  .banner-slides {
+    position: relative;
+    width: 100%;
+    height: 260px;
   }
 
   @media (min-width: 600px) {
-    .banner-strip img { height: 200px; }
+    .banner-slides { height: 380px; }
+  }
+
+  .banner-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+
+  .banner-slide.active {
+    opacity: 1;
+  }
+
+  .banner-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 2;
+  }
+
+  .banner-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.45);
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .banner-dot.active {
+    background: rgba(255,255,255,0.95);
   }
 
   /* ── CONTENT AREA ── */
@@ -259,26 +288,32 @@
   .info-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 0;
+    margin-top: 16px;
+    border-top: 1px solid var(--border);
   }
 
   .info-pill {
-    background: var(--accent-pale);
-    border: 1px solid var(--accent-soft);
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-size: 13px;
-    color: var(--text-mid);
+    flex: 1;
+    min-width: 100px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-right: 1px solid var(--border);
+  }
+
+  .info-pill:last-child {
+    border-right: none;
   }
 
   .info-pill strong {
     display: block;
-    font-size: 11px;
-    letter-spacing: 0.1em;
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--accent);
-    margin-bottom: 2px;
+    opacity: 0.7;
+    margin-bottom: 3px;
     font-weight: 500;
   }
 
@@ -371,30 +406,28 @@
 
   /* Contact info items */
   .contact-items {
-    margin-top: 16px;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 0;
   }
 
   .contact-item {
     display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
   }
 
   .contact-item-label {
-    font-size: 11px;
+    font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     font-weight: 500;
-    color: var(--accent);
-    min-width: 56px;
-    padding-top: 2px;
+    color: var(--text-muted);
+    min-width: 52px;
+    line-height: 1.5;
   }
 
   .contact-item-val {
@@ -403,29 +436,84 @@
   }
 
   .contact-item-val a {
-    color: var(--accent);
+    color: var(--text);
     text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.01em;
   }
-  .contact-item-val a:hover { text-decoration: underline; }
+  .contact-item-val a:hover { color: var(--accent); }
 
-  /* Placeholder box */
-  .placeholder-box {
-    margin-top: 16px;
-    border: 1px dashed var(--border);
-    border-radius: var(--radius);
-    padding: 28px 20px;
-    text-align: center;
+  /* ── QR CARDS ── */
+  .qr-row {
+    display: flex;
+    gap: 0;
+    margin-top: 0;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .qr-card {
+    flex: 1;
+    min-width: 130px;
+    border: none;
+    border-right: 1px solid var(--border);
+    border-radius: 0;
+    background: transparent;
+    overflow: hidden;
+  }
+
+  .qr-card:last-child {
+    border-right: none;
+  }
+
+  .qr-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 14px 18px;
+    gap: 10px;
+  }
+
+  .qr-img-wrap {
+    width: 110px;
+    height: 110px;
+    background: transparent;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: none;
+  }
+
+  .qr-empty-icon {
+    font-size: 30px;
+    opacity: 0.45;
+  }
+
+  .qr-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .qr-card-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
     color: var(--text-muted);
-    font-size: 13px;
-    line-height: 1.9;
-    background: var(--accent-pale);
+    text-align: center;
+    margin-top: 0;
   }
 
-  .placeholder-box .ph-icon {
-    font-size: 22px;
-    display: block;
-    margin-bottom: 8px;
-    opacity: 0.5;
+  .qr-card-name {
+    font-size: 12px;
+    color: var(--text-mid);
+    text-align: center;
+    min-height: 0;
   }
 
   /* ── FOOTER ── */
@@ -553,88 +641,6 @@
     font-style: normal;
   }
 
-  /* ── QR CARDS ── */
-  .qr-row {
-    display: flex;
-    gap: 12px;
-    margin-top: 12px;
-    flex-wrap: wrap;
-  }
-
-  .qr-card {
-    flex: 1;
-    min-width: 140px;
-    max-width: 200px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
-    overflow: hidden;
-  }
-
-  .qr-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 18px 14px 14px;
-    gap: 6px;
-  }
-
-  .qr-img-wrap {
-    width: 100px;
-    height: 100px;
-    background: var(--surface-2);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border: 1px solid var(--border);
-  }
-
-  .qr-empty-icon {
-    font-size: 30px;
-    opacity: 0.45;
-  }
-
-  .qr-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .qr-card-label {
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    text-align: center;
-    margin-top: 4px;
-  }
-
-  .qr-card-name {
-    font-size: 12.5px;
-    color: var(--text-mid);
-    text-align: center;
-    min-height: 16px;
-  }
-
-  .qr-upload-btn {
-    display: inline-block;
-    margin-top: 6px;
-    padding: 5px 12px;
-    border: 1px dashed var(--border);
-    border-radius: 20px;
-    font-size: 11px;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
-    text-align: center;
-  }
-
-  .qr-upload-btn:hover {
-    border-color: var(--accent-soft);
-    color: var(--accent);
-  }
 
   /* ── FADE IN ── */
   @keyframes fadeUp {
@@ -650,7 +656,7 @@
     animation: fadeUp 0.45s ease both;
   }
 
-  .page.active .banner-strip { animation-delay: 0.07s; }
+  .page.active .banner-slideshow { animation-delay: 0.07s; }
   .page.active .section:nth-child(1) { animation-delay: 0.08s; }
   .page.active .section:nth-child(2) { animation-delay: 0.14s; }
   .page.active .section:nth-child(3) { animation-delay: 0.20s; }
@@ -685,29 +691,36 @@
 
   <!-- Hero -->
   <div class="hero">
-    <div class="hero-eyebrow">Oulipo · 乌力波 · 潜在文学工场</div>
     <h1 class="hero-title">SISUs <em>Writing Games</em><br>写作游戏工作坊</h1>
-    <div class="hero-subtitle">Oulipo Writing Games Workshop</div>
+    <div class="hero-subtitle">SISUs Oulipo Writing Games Workshop</div>
     <div class="hero-tags">
-      <span class="tag">Research × Practice × Game</span>
-      <span class="tag">Oulipo / Constraints / Mapping</span>
+      <span class="tag">Writing as Game, Writing as Mapping.</span>
     </div>
   </div>
 
-  <!-- Banner image strip -->
-  <div class="banner-strip">
-    <img src="https://sisuqian.github.io/writing-games-workshop/banner-1.jpg" alt="Workshop 1" />
-    <img src="https://sisuqian.github.io/writing-games-workshop/banner-2.jpg" alt="Workshop 2" />
-    <img src="https://sisuqian.github.io/writing-games-workshop/banner-3.jpg" alt="Workshop 3" />
-    <img src="https://sisuqian.github.io/writing-games-workshop/banner-4.jpg" alt="Workshop 4" />
-    <img src="https://sisuqian.github.io/writing-games-workshop/banner-5.jpg" alt="Workshop 5" />
+  <!-- Banner slideshow -->
+  <div class="banner-slideshow">
+    <div class="banner-slides">
+      <img class="banner-slide active" src="https://sisuqian.github.io/writing-games-workshop/banner-1.jpg" alt="Workshop 1" />
+      <img class="banner-slide" src="https://sisuqian.github.io/writing-games-workshop/banner-2.jpg" alt="Workshop 2" />
+      <img class="banner-slide" src="https://sisuqian.github.io/writing-games-workshop/banner-3.jpg" alt="Workshop 3" />
+      <img class="banner-slide" src="https://sisuqian.github.io/writing-games-workshop/banner-4.jpg" alt="Workshop 4" />
+      <img class="banner-slide" src="https://sisuqian.github.io/writing-games-workshop/banner-5.jpg" alt="Workshop 5" />
+    </div>
+    <div class="banner-dots">
+      <span class="banner-dot active"></span>
+      <span class="banner-dot"></span>
+      <span class="banner-dot"></span>
+      <span class="banner-dot"></span>
+      <span class="banner-dot"></span>
+    </div>
   </div>
 
   <!-- Content -->
   <div class="content-wrap">
 
     <!-- Info pills -->
-    <div class="section">
+    <div class="section" style="border-bottom:none; padding-bottom:0;">
       <div class="info-grid">
         <div class="info-pill"><strong>形式 Format</strong>线上 / 线下 &nbsp;Online · Onsite</div>
         <div class="info-pill"><strong>人数 Size</strong>4 – 20 人</div>
@@ -739,7 +752,7 @@
       </div>
       <p class="body-cn">
         写作不仅是表达工具，也是可以被设计、被触发、被生成的实践。<br>
-        本工作坊把"限制"当作通道：让结构先行，让语言在规则中自行生长。
+        本工作坊把"游戏"当作通道：结构先行，让语言在规则中自行生长。
       </p>
       <p class="body-en">
         Writing is not only expression but a practice that can be designed, triggered, and generated.<br>
@@ -782,11 +795,10 @@
         <span class="section-label-bar"></span>
       </div>
       <p class="body-cn">
-        线上或线下预约报名，限 4–20 人。可为机构、学校、艺术空间提供定制版工作坊。<br>
-        报名时可说明：语言（中/英/双语）、主题、时长、参与者背景。
+        线上或线下预约报名，限 4–20 人。为不同机构和群体限定工作坊的语言、耗时、内容主题。
       </p>
       <p class="body-en">
-        Registration by appointment (online or onsite). Group size: 4–20. Tailored versions are available for institutions, schools, and art spaces. When registering, feel free to indicate: language preference (Chinese / English / bilingual), theme, duration, and participant background.
+        Registration by appointment (online or onsite). Group size: 4–20. Language, duration, and thematic focus can be tailored for different institutions and groups.
       </p>
     </div>
 
@@ -1144,7 +1156,7 @@ The sky is bright. 天亮了。The sky is bright. 天亮了。
   <div class="phrase-band">Writing as Game, Writing as Mapping.</div>
 
   <footer>
-    <strong>SISU Studio</strong>&ensp;·&ensp;Concept &amp; Copyright © SISU Studio&ensp;·&ensp;Design by WrongWrong Planet
+    <strong>SISU Studio</strong>&ensp;·&ensp;Concept &amp; Copyright © SISU Studio&ensp;·&ensp;Design by WrongWrong Planet 迷路星球
   </footer>
 
 </div><!-- /page-workshop -->
@@ -1237,13 +1249,40 @@ The sky is bright. 天亮了。The sky is bright. 天亮了。
   <div class="phrase-band">Writing as Game, Writing as Mapping.</div>
 
   <footer>
-    <strong>SISU Studio</strong>&ensp;·&ensp;Concept &amp; Copyright © SISU Studio&ensp;·&ensp;Design by WrongWrong Planet
+    <strong>SISU Studio</strong>&ensp;·&ensp;Concept &amp; Copyright © SISU Studio&ensp;·&ensp;Design by WrongWrong Planet 迷路星球
   </footer>
 
 </div><!-- /page-contact -->
 
 
 <script>
+  // ── SLIDESHOW ──
+  (function() {
+    const slides = document.querySelectorAll('.banner-slide');
+    const dots   = document.querySelectorAll('.banner-dot');
+    if (!slides.length) return;
+    let current = 0;
+    let timer;
+
+    function goTo(n) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = (n + slides.length) % slides.length;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+    }
+
+    function next() { goTo(current + 1); }
+    function startAuto() { timer = setInterval(next, 3500); }
+    function stopAuto()  { clearInterval(timer); }
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => { stopAuto(); goTo(i); startAuto(); });
+    });
+
+    startAuto();
+  })();
+
   function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
